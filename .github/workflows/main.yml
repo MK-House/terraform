@@ -12,9 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Setup prerequisites
+        run: |
+          apt-get update
+          apt-get install -y curl jq
+
       - name: Extract platform
         id: extract_platform
-        run: echo "Platform=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: |
+          echo "Platform=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Extract architecture
         id: extract_architecture
