@@ -10,6 +10,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Extract platform
+        id: extract_platform
+        run: echo "Platform=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Extract architecture
+        id: extract_architecture
+        run: |
+          ARCH=$(uname -m)
+          case "$ARCH" in
+              x86_64)
+                  ARCH="amd64"
+                  ;;
+              aarch64)
+                  ARCH="arm64"
+                  ;;
+              *)
+                  echo "Unsupported architecture: $ARCH"
+                  exit 1
+                  ;;
+          esac
+          echo "Architecture=$ARCH" >> $GITHUB_ENV
+
       - name: Execute download_terraform.sh script
         run: |
           chmod +x ./download_terraform.sh
