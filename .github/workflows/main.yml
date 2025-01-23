@@ -7,15 +7,17 @@ jobs:
     runs-on:
       - self-hosted
       - lab
+    env:
+      TERRAFORM_SETUP_LOG_PATH: /tmp/terraform-setup.log
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Execute download_terraform.sh script
+      - name: Terraform setup
         run: |
-          sudo chmod +x ./download_terraform.sh
-          sudo ./download_terraform.sh
+          sudo chmod +x ./terraform-setup.sh
+          sudo ./terraform-setup.sh $TERRAFORM_SETUP_LOG_PATH
         continue-on-error: true
 
       - name: Upload log file on failure
@@ -23,4 +25,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-install-log
-          path: /tmp/terraform_install.log
+          path: $TERRAFORM_SETUP_LOG_PATH

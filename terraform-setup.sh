@@ -1,6 +1,13 @@
 #!/bin/bash
 
-LOG_FILE="$HOME/terraform_install.log"
+# Verifica se foi passado um argumento para o caminho do arquivo de log
+if [ -z "$1" ]; then
+    LOG_FILE="/tmp/terraform-setup.log"
+else
+    LOG_FILE="$1"
+fi
+
+# Cria o arquivo de log ou limpa seu conteúdo se já existir
 : > $LOG_FILE
 exec > >(tee -i $LOG_FILE)
 exec 2>&1
