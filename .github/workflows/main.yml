@@ -9,7 +9,7 @@ jobs:
   download-terraform:
     runs-on:
       - self-hosted
-      - linux
+      - Linux
       - lab
     env:
       TERRAFORM_SETUP_LOG_PATH: /tmp/terraform-setup.log
