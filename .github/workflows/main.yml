@@ -59,6 +59,16 @@ jobs:
           echo "Terraform_Download_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
           echo "Terraform download link: $DOWNLOAD_URL"
 
+      - name: Check and download Terraform if not exists
+        run: |
+          FILE_PATH="/tmp/terraform/terraform_${Latest_Terraform_Version}_${Platform}_${Architecture}.zip"
+          if [ ! -f "$FILE_PATH" ]; then
+            mkdir -p /tmp/terraform
+            curl -o "$FILE_PATH" "$Terraform_Download_URL"
+          else
+            echo "File already exists: $FILE_PATH"
+          fi
+
       - name: Execute download_terraform.sh script
         run: |
           chmod +x ./download_terraform.sh
