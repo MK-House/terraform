@@ -10,7 +10,7 @@ jobs:
   download-terraform:
     runs-on: ubuntu-latest
     env:
-      TERRAFORM_SETUP_LOG_PATH: ~/terraform-setup.log
+      TERRAFORM_SETUP_LOG_PATH: /home/runner/terraform-setup.log
 
     steps:
       - name: Checkout repository
