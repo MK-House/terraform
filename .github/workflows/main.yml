@@ -34,6 +34,13 @@ jobs:
           esac
           echo "Architecture=$ARCH" >> $GITHUB_ENV
 
+      - name: Get latest Terraform version
+        id: get_terraform_version
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | jq -r .tag_name)
+          VERSION=${LATEST_VERSION#v}
+          echo "Latest_Terraform_Version=$VERSION" >> $GITHUB_ENV
+
       - name: Execute download_terraform.sh script
         run: |
           chmod +x ./download_terraform.sh
