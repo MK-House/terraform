@@ -1,0 +1,24 @@
+name: Download Terraform
+
+on: [push]
+
+jobs:
+  download-terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Execute download_terraform.sh script
+        run: |
+          chmod +x ./download_terraform.sh
+          ./download_terraform.sh
+        continue-on-error: true
+
+      - name: Upload log file on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform-install-log
+          path: /tmp/terraform_install.log
