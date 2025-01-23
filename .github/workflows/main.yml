@@ -12,55 +12,62 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Determine runner user
-        id: runner_user
+      - name: Install dependencies
+        env:
+          MKADMIN_PASSWORD: ${{ secrets.MKADMIN_PASSWORD }}
         run: |
-          echo "Runner User: $(whoami)"
+          echo "$MKADMIN_PASSWORD" | sudo -S apt-get update
+          echo "$MKADMIN_PASSWORD" | sudo -S apt-get install -y curl jq
 
-      - name: Setup prerequisites
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl jq
-
-      - name: Extract platform
-        id: extract_platform
-        run: |
-          echo "Platform=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Extract architecture
-        id: extract_architecture
-        run: |
-          ARCH=$(uname -m)
-          case "$ARCH" in
-              x86_64)
-                  ARCH="amd64"
-                  ;;
-              aarch64)
-                  ARCH="arm64"
-                  ;;
-              *)
-                  echo "Unsupported architecture: $ARCH"
-                  exit 1
-                  ;;
-          esac
-          echo "Architecture=$ARCH" >> $GITHUB_ENV
-
-      - name: Get latest Terraform version
-        id: get_terraform_version
-        run: |
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | jq -r .tag_name)
-          VERSION=${LATEST_VERSION#v}
-          echo "Latest_Terraform_Version=$VERSION" >> $GITHUB_ENV
-
-      - name: Execute download_terraform.sh script
-        run: |
-          chmod +x ./download_terraform.sh
-          ./download_terraform.sh
-        continue-on-error: true
-
-      - name: Upload log file on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-install-log
-          path: /tmp/terraform_install.log
+###      - name: Determine runner user
+###        id: runner_user
+###        run: |
+###          echo "Runner User: $(whoami)"
+###
+###      - name: Setup prerequisites
+###        run: |
+###          sudo apt-get update
+###          sudo apt-get install -y curl jq
+###
+###      - name: Extract platform
+###        id: extract_platform
+###        run: |
+###          echo "Platform=$(uname | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+###
+###      - name: Extract architecture
+###        id: extract_architecture
+###        run: |
+###          ARCH=$(uname -m)
+###          case "$ARCH" in
+###              x86_64)
+###                  ARCH="amd64"
+###                  ;;
+###              aarch64)
+###                  ARCH="arm64"
+###                  ;;
+###              *)
+###                  echo "Unsupported architecture: $ARCH"
+###                  exit 1
+###                  ;;
+###          esac
+###          echo "Architecture=$ARCH" >> $GITHUB_ENV
+###
+###      - name: Get latest Terraform version
+###        id: get_terraform_version
+###        run: |
+###          LATEST_VERSION=$(curl -s https://api.github.com/repos/hashicorp/terraform/releases/latest | jq -r .tag_name)
+###          VERSION=${LATEST_VERSION#v}
+###          echo "Latest_Terraform_Version=$VERSION" >> $GITHUB_ENV
+###
+###      - name: Execute download_terraform.sh script
+###        run: |
+###          chmod +x ./download_terraform.sh
+###          ./download_terraform.sh
+###        continue-on-error: true
+###
+###      - name: Upload log file on failure
+###        if: failure()
+###        uses: actions/upload-artifact@v4
+###        with:
+###          name: terraform-install-log
+###          path: /tmp/terraform_install.log
