@@ -18,11 +18,9 @@ jobs:
           echo "Runner User: $(whoami)"
 
       - name: Setup prerequisites
-        env:
-          MKADMIN_PASSWORD: ${{ secrets.MKADMIN_PASSWORD }}
         run: |
-          echo "$MKADMIN_PASSWORD" | sudo -S apt-get update
-          echo "$MKADMIN_PASSWORD" | sudo -S apt-get install -y curl jq
+          sudo apt-get update
+          sudo apt-get install -y curl jq
 
       - name: Extract platform
         id: extract_platform
