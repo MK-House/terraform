@@ -1,6 +1,9 @@
 name: Download Terraform
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   download-terraform:
