@@ -18,7 +18,7 @@ jobs:
 
       - name: Upload log file on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: terraform-install-log
           path: /tmp/terraform_install.log
