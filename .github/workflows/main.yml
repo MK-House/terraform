@@ -21,8 +21,8 @@ jobs:
         env:
           MKADMIN_PASSWORD: ${{ secrets.MKADMIN_PASSWORD }}
         run: |
-          echo "${MKADMIN_PASSWORD}" | sudo -S apt-get update
-          echo "${MKADMIN_PASSWORD}" | sudo -S apt-get install -y curl jq
+          echo "$MKADMIN_PASSWORD" | sudo -S apt-get update
+          echo "$MKADMIN_PASSWORD" | sudo -S apt-get install -y curl jq
 
       - name: Extract platform
         id: extract_platform
