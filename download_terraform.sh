@@ -10,6 +10,18 @@ log() {
     echo "$1" >> $LOG_FILE
 }
 
+log "User executing the script: $(whoami)"
+
+log "Installing dependencies..."
+if command -v apt-get >/dev/null; then
+    sudo apt-get update && sudo apt-get install -y curl unzip jq
+elif command -v yum >/dev/null; then
+    sudo yum install -y curl unzip jq
+else
+    log "Unsupported package manager. Please install curl, unzip, and jq manually."
+    exit 1
+fi
+
 log "Detecting platform and architecture..."
 PLATFORM=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
@@ -41,28 +53,36 @@ VERSION=${LATEST_VERSION#v}
 log "Version without prefix: $VERSION"
 
 DOWNLOAD_URL="https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_${PLATFORM}_${ARCH}.zip"
+DOWNLOAD_PATH="/tmp/terraform/terraform_${VERSION}_${PLATFORM}_${ARCH}.zip"
 log "Download URL: $DOWNLOAD_URL"
 
-log "Downloading Terraform..."
-if ! curl -LO $DOWNLOAD_URL; then
-  log "Failed to download Terraform."
-  exit 1
+# Create the directory if it doesn't exist
+mkdir -p /tmp/terraform
+
+if [ -f "$DOWNLOAD_PATH" ]; then
+    log "Terraform ZIP file already exists. Skipping download."
+else
+    log "Downloading Terraform..."
+    if ! curl -Lo $DOWNLOAD_PATH $DOWNLOAD_URL; then
+      log "Failed to download Terraform."
+      exit 1
+    fi
 fi
 
 log "Verifying the downloaded file..."
-if ! file terraform_${VERSION}_${PLATFORM}_${ARCH}.zip | grep -q "Zip archive data"; then
+if ! file $DOWNLOAD_PATH | grep -q "Zip archive data"; then
   log "The downloaded file is not a valid ZIP archive."
   exit 1
 fi
 
 log "Unzipping Terraform..."
-if ! unzip terraform_${VERSION}_${PLATFORM}_${ARCH}.zip; then
+if ! unzip -o $DOWNLOAD_PATH -d /tmp/terraform; then
   log "Failed to unzip Terraform."
   exit 1
 fi
 
 log "Moving Terraform binary to /usr/local/bin..."
-if ! sudo mv terraform /usr/local/bin/; then
+if ! sudo mv /tmp/terraform/terraform /usr/local/bin/; then
   log "Failed to move Terraform binary."
   exit 1
 fi
