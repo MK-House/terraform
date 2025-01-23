@@ -1,12 +1,14 @@
 name: Download Terraform
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   download-terraform:
     runs-on:
       - self-hosted
-      - lab
     env:
       TERRAFORM_SETUP_LOG_PATH: /tmp/terraform-setup.log
 
