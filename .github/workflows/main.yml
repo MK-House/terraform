@@ -1,4 +1,4 @@
-name: 'Test Terraform setup script'
+name: 'Test and release Terraform artifacts'
 run-name: '${{ github.event_name }} by ${{ github.actor }} #${{ github.run_number }}.${{ github.run_attempt }}'
 
 on:
