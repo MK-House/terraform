@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   download-terraform:
-    runs-on: self-hosted
+    runs-on: self-hosted,lab
 
     steps:
       - name: Checkout repository
