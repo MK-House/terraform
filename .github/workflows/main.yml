@@ -12,6 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Determine runner user
+        id: runner_user
+        run: echo "Runner User: $(whoami)"
+
       - name: Setup prerequisites
         run: |
           sudo apt-get update
