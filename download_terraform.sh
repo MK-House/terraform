@@ -36,7 +36,11 @@ if [ -z "$LATEST_VERSION" ]; then
 fi
 log "Latest Terraform version: $LATEST_VERSION"
 
-DOWNLOAD_URL="https://releases.hashicorp.com/terraform/${LATEST_VERSION}/terraform_${LATEST_VERSION}_${PLATFORM}_${ARCH}.zip"
+# Remove the 'v' prefix from the version
+VERSION=${LATEST_VERSION#v}
+log "Version without prefix: $VERSION"
+
+DOWNLOAD_URL="https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_${PLATFORM}_${ARCH}.zip"
 log "Download URL: $DOWNLOAD_URL"
 
 log "Downloading Terraform..."
@@ -46,13 +50,13 @@ if ! curl -LO $DOWNLOAD_URL; then
 fi
 
 log "Verifying the downloaded file..."
-if ! file terraform_${LATEST_VERSION}_${PLATFORM}_${ARCH}.zip | grep -q "Zip archive data"; then
+if ! file terraform_${VERSION}_${PLATFORM}_${ARCH}.zip | grep -q "Zip archive data"; then
   log "The downloaded file is not a valid ZIP archive."
   exit 1
 fi
 
 log "Unzipping Terraform..."
-if ! unzip terraform_${LATEST_VERSION}_${PLATFORM}_${ARCH}.zip; then
+if ! unzip terraform_${VERSION}_${PLATFORM}_${ARCH}.zip; then
   log "Failed to unzip Terraform."
   exit 1
 fi
