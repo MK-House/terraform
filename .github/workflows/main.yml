@@ -41,6 +41,12 @@ jobs:
     needs:
       - 'download-terraform'
 
+    permissions:
+      contents: 'write'
+      packages: 'write'
+      issues: 'write'
+      deployments: 'write'
+
     steps:
       - name: 'Checkout repository'
         uses: 'actions/checkout@v2'
