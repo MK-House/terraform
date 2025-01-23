@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOG_FILE="/tmp/terraform_install.log"
+LOG_FILE="$HOME/terraform_install.log"
 : > $LOG_FILE
 exec > >(tee -i $LOG_FILE)
 exec 2>&1
@@ -14,11 +14,11 @@ log "User executing the script: $(whoami)"
 
 log "Installing dependencies..."
 if command -v apt-get >/dev/null; then
-    sudo apt-get update && sudo apt-get install -y curl unzip jq
+    sudo apt-get update && sudo apt-get install -y curl unzip jq file
 elif command -v yum >/dev/null; then
-    sudo yum install -y curl unzip jq
+    sudo yum install -y curl unzip jq file
 else
-    log "Unsupported package manager. Please install curl, unzip, and jq manually."
+    log "Unsupported package manager. Please install curl, unzip, jq, and file manually."
     exit 1
 fi
 
